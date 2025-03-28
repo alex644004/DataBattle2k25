@@ -1,5 +1,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+const router = useRouter();
+const route = useRoute();
 
 const userAnswers = ref([]);
 const score = ref(0);
@@ -12,7 +15,6 @@ onMounted(() => {
     userAnswers.value = JSON.parse(storedAnswers);
 
     totalQuestions.value = userAnswers.value.length;
-    console.log("Réponses de l'utilisateur:", userAnswers.value);
 
     score.value = userAnswers.value.filter(answer => answer.correct).length;
   }
@@ -20,10 +22,17 @@ onMounted(() => {
 const selectQuestion = (index) => {
   selectedIndex.value = selectedIndex.value === index ? null : index; // Active/Désactive l'affichage
 };
+const goHome = () => {
+  router.push({ name: "/" });
+
+};
 </script>
 
 <template>
   <div class="container">
+    <div class="home-container">
+      <button @click="goHome" class="home-btn">Retour à l'accueil</button>
+    </div>
     <h1>Récapitulatif du Quiz</h1>
 
     <div class="score-box">
@@ -42,7 +51,7 @@ const selectQuestion = (index) => {
 
     <!-- Vérification avant d'afficher -->
     <div v-if="selectedIndex !== null && userAnswers[selectedIndex]" class="recap-item">
-      
+
       <h2>Question {{ selectedIndex + 1 }}</h2>
       <p :class="userAnswers[selectedIndex].correct ? 'correct' : 'incorrect'">
         {{ userAnswers[selectedIndex].correct ? "✅ Correct answer" : "❌ Incorrect answer" }}
@@ -140,5 +149,29 @@ const selectQuestion = (index) => {
 .incorrect {
   color: red;
   font-weight: bold;
+}
+
+.home-btn {
+  background-color: #5c6379;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1.2em;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: 0.3s;
+
+}
+
+.home-btn:hover {
+  background-color: #0056b3;
+}
+
+.home-container {
+  display: flex;
+  justify-content: flex-end;
+  /* Aligne le bouton à droite */
+  margin-bottom: 15px;
 }
 </style>

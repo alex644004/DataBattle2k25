@@ -4,7 +4,7 @@ import QuizView from "../views/QuizView.vue";
 import RecapView from "../views/RecapView.vue";
 
 const routes = [
-  { path: "/", component: HomeView }, // Page d'accueil
+  { path: "/", name :"/" , component: HomeView }, // Page d'accueil
   { path: "/quiz", component: QuizView }, // Page du quiz
   { path: "/recap", name: "Recap", component: RecapView },
 ];
