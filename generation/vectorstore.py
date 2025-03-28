@@ -182,18 +182,25 @@ def get_weighted_embedding(embedder, chunk):
 
     return final_embedding.tolist()
 
-def get_subthemes_for_chunk(chunk_embedding, themes, embedding_model):
-    """ Associe plusieurs sous-thèmes à un chunk selon la similarité."""
+def get_subthemes_for_chunk(chunk_embedding, themes, embedding_model, similarity_threshold=0.6):
+    """
+    Associe des sous-thèmes à un chunk en fonction de la similarité de leurs embeddings.
+    """
     assigned_subthemes = []
-    
-    for theme, subthemes in themes.items():
-        for subtheme, description in subthemes.items():
-            theme_embedding = embedding_model.encode(subtheme, normalize_embeddings=True)
-            similarity = np.dot(chunk_embedding, theme_embedding)
+
+    # Parcourir tous les sous-thèmes
+    for subthemes in themes.values():
+        for subtheme in subthemes:
+            # Encoder le sous-thème pour obtenir son embedding
+            subtheme_embedding = embedding_model.encode(subtheme, normalize_embeddings=True)
             
-            if similarity > 0.6:
+            # Calculer la similarité cosinus entre l'embedding du chunk et celui du sous-thème
+            similarity = np.dot(chunk_embedding, subtheme_embedding)
+            
+            # Si la similarité est supérieure au seuil, ajouter le sous-thème à la liste des sous-thèmes assignés
+            if similarity > similarity_threshold:
                 assigned_subthemes.append(subtheme)
-    
+
     return assigned_subthemes
 
     
